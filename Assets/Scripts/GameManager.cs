@@ -1,27 +1,44 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using AVOSCloud;
 
-public class GameManager : MonoBehaviour {
-	public static bool gameOver=false;
-	public static bool gameStart=false;
-	public static int score=0;
-	// Use this for initialization
-	void Start () {
-		score=0;
-		gameOver = false;
-		gameStart = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (!gameStart) {
+public class GameManager : MonoBehaviour
+{
+    public static bool gameOver = false;
+    public static bool gameStart = false;
+    public static int score = 0;
+    // Use this for initialization
+    void Start()
+    {
+        score = 0;
+        gameOver = false;
+        gameStart = false;
+    }
 
-				if(Input.GetMouseButtonDown(0)){
-					gameStart=true;
-			}
-				}
-		if (gameStart)
-		if (Input.GetKeyUp (KeyCode.Escape))
-						Application.Quit();
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (!gameStart)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                AVAnalytics.StartEvent("Play", new Dictionary<string, object> 
+                {
+                    {"startPlayTime",DateTime.UtcNow.ToString()}
+                });//记录玩家点击屏幕游戏开始的时间。
+                gameStart = true;
+            }
+        }
+        if (gameStart)
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                AVAnalytics.StopEvent("Play", new Dictionary<string, object> 
+                {
+                    {"quitTime",DateTime.UtcNow.ToString()}
+                });//记录玩家推出游戏时间。
+                Application.Quit();
+            }
+    }
 }
