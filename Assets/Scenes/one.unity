@@ -730,7 +730,7 @@ GameObject:
   - 114: {fileID: 599083543}
   - 114: {fileID: 599083542}
   m_Layer: 0
-  m_Name: ScorePanel
+  m_Name: Game Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

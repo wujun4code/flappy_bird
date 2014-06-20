@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static bool gameOver = false;
     public static bool gameStart = false;
     public static int score = 0;
+    public static int totalGames = 0;
     // Use this for initialization
     void Start()
     {
@@ -18,27 +19,28 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+void Update()
+{
+    if (!gameStart)
     {
-        if (!gameStart)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            AVAnalytics.StartEvent("OneGame", new Dictionary<string, object> 
             {
-                AVAnalytics.StartEvent("Play", new Dictionary<string, object> 
-                {
-                    {"startPlayTime",DateTime.UtcNow.ToString()}
-                });//记录玩家点击屏幕游戏开始的时间。
-                gameStart = true;
-            }
+                {"startSilgelGameTime",DateTime.UtcNow.ToString()}
+            });//记录玩家点击屏幕游戏开始的时间。
+            gameStart = true;
+            totalGames++;
         }
-        if (gameStart)
-            if (Input.GetKeyUp(KeyCode.Escape))
-            {
-                AVAnalytics.StopEvent("Play", new Dictionary<string, object> 
-                {
-                    {"quitTime",DateTime.UtcNow.ToString()}
-                });//记录玩家推出游戏时间。
-                Application.Quit();
-            }
     }
+    if (gameStart)
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            AVAnalytics.TrackEvent("QuitGame", new Dictionary<string, object> 
+            {
+                {"totalGames",totalGames}
+            });
+            Application.Quit();
+        }
+}
 }
